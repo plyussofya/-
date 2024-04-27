@@ -1,0 +1,72 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'century gothic', sans-serif;
+}
+
+#right {
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 100px;
+  transform: scaleX(-1);
+  padding: 12px;
+  cursor: pointer;
+}
+
+#left {
+  position: absolute;
+  left: 0;
+  bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 100px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+#countc {
+  position: absolute;
+  bottom: calc(100% - 67px);
+  left: calc(100% - 73px);
+  width: 8px;
+  padding: 12px;
+  font-size: 19px;
+  color: black;
+  cursor: pointer;
+}
+
+#for_countc {
+  position: absolute;
+  bottom: calc(100% - 67px);
+  left: calc(100% - 130px);
+  width: 100px;
+}
+
+#time {
+  position: absolute;
+  bottom: calc(100% - 67px);
+  right: calc(100% - 80px);
+  width: 8px;
+  padding: 12px;
+  font-size: 17px;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#for_time {
+  position: absolute;
+  bottom: calc(100% - 68px);
+  right: calc(100% - 115px);
+  width: 100px;
+}
