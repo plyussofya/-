@@ -1,74 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Кубитоклобусы</title>
-    <link rel="Icon" href="cubes\assets\boxred.png">
-    <style>
-      .menu {
-        position: absolute;
-        top: 10px;
-        right: 100px;
-        z-index: 100;
-      }
-      .menu a {
-        display: block;
-        color: white;
-        margin-bottom: 10px;
-        padding: 5px 10px;
-        text-decoration: none;
-        border-radius: 5px;
-      }
-      .dropdown {
-        display: none;
-        position: absolute;
-        width: 150px;
-        z-index: 101;
-        border-radius: 10px;
-        text-align: center;
-      }
-      a {
-        background-color: #333;
-      }
-      .menu:hover .dropdown {
-        display: block;
-      }
-      .dropdown a {
-        color: white;
-        padding: 5px;
-        display: block;
-        text-decoration: none;
-      }
-      .dropdown a:hover {
-        background-color: #555;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="menu">
-      <a href="#">Игры</a>
-      <div class="dropdown">
-        <a href="cubes/game1.html">Мир кубитоклобусов</a>
-        <a href="fruits/game2.html">Поймай фруктики</a>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Кубитоклобусы</title>
+  <style>
+    .menu {
+      position: absolute;
+      top: 10px;
+      right: 100px;
+      z-index: 100;
+    }
+    .menu a {
+      display: inline-block;
+      color: white;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      width: 150px;
+      z-index: 101;
+      border-radius: 10px;
+      text-align: center;
+    }
+    a {
+      background-color: #333;
+    }
+    .menu:hover .dropdown {
+      display: block;
+    }
+    .dropdown a {
+	
+      color: white;
+      padding: 5px;
+      display: block;
+      text-decoration: none;
+    }
+    .dropdown a:hover {
+      background-color: #555;
+    }
+    .download-link {
+	  position: absolute;
+      top: 10px;
+      right: 50px; /* Adjust as needed */
+      z-index: 100;
+      color: white;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: #333;
+	}
+    .download-link::before {
+      content: "\1F4E5";
+      display: inline-block;
+      font-size: 13px;
+	}
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <a href="#">Игры</a>
+    <div class="dropdown">
+      <a href="cubes/game1.html">Мир кубитоклобусов</a>
+      <a href="fruits/game2.html">Поймай фруктики</a>
     </div>
-
-    <iframe
-      style="
-        position: absolute;
-        border: none;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-      "
-      src="https://online.fliphtml5.com/juane/gvub/"
-      seamless="seamless"
-      scrolling="no"
-      frameborder="0"
-      allowtransparency="true"
-      allowfullscreen="true"
-    ></iframe>
-  </body>
+  </div>
+<a class="download-link" title="Скачать маркеры для игр" href="https://disk.yandex.ru/i/Fskr4dTGQ0UjGA"></a>
+  <iframe
+    style="
+      position: absolute;
+      border: none;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+    "
+    src="https://online.fliphtml5.com/juane/gvub/"
+    seamless="seamless"
+    scrolling="no"
+    frameborder="0"
+    allowtransparency="true"
+    allowfullscreen="true"
+  ></iframe>
+</body>
 </html>
