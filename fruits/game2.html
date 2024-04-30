@@ -100,7 +100,7 @@
             isChecking = true;
             // Проверяем, достигнута ли победа или поражение
             const cc = document.getElementById("countc");
-            if (Number(cc.textContent) >= 35) {
+            if (Number(cc.textContent) >= 45) {
               swal(
                 "Победа!",
                 "Вы собрали " + cc.textContent + " фруктов и победили!",
@@ -184,11 +184,15 @@
       const fruits = [
         {
           model:
-            "assets/lukoshko.glb"
+            "assets/apple.glb"
         },
         {
           model:
-            "assets/lukoshko.glb",
+            "assets/lemon.glb",
+        },
+	{
+          model:
+            "assets/orange.glb",
         },
       ];
 
