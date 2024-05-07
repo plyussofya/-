@@ -70,3 +70,14 @@ body {
   right: calc(100% - 115px);
   width: 100px;
 }
+
+#download{
+	position: fixed;
+	bottom: 20px;
+	left: calc(100% - 50px);
+	z-index: 1;
+	transform: translateX(-50%);
+	width: 40px;
+	padding: 0 30px;
+	cursor: pointer;
+}
