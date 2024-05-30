@@ -39,193 +39,234 @@
         type="audio/mpeg"
       />
     </audio>
-	
+    <div id="info">
+      <img
+        src="assets/info.png"
+        style="width: 100%"
+      />
+    </div>
+    <div class="overlay">
+      <img
+        src="assets/pravila.png"
+        style="height: 70%"
+      />
+    </div>
+    
     <script>
-      document.getElementById("countc").textContent = "0";
-      let fallSpeed = 0.02;
+      const infoButton = document.querySelector("#info");
+      const overlay = document.querySelector(".overlay");
+      let timerPaused = false;
 
-      AFRAME.registerComponent("down", {
-        tick: function () {
-          if (!isChecking) {
-            const box = document.getElementById("plat");
-            const cc = document.getElementById("countc");
-            let pso = this.el.getAttribute("position");
-            if (pso["y"] > 0) {
-              pso =
-                pso["x"].toString() +
-                " " +
-                (pso["y"] - fallSpeed).toString() +
-                " 0";
-            }
-            this.el.setAttribute("position", pso);
-            if (this.el.getAttribute("position")["y"] < 0) {
-              let w = Math.random() * 8 - 4;
-              this.el.setAttribute("position", w + " 5 0");
-            }
-
-            if (
-              this.el.getAttribute("position")["x"] <
-                box.getAttribute("position")["x"] + 1 &&
-              this.el.getAttribute("position")["x"] >
-                box.getAttribute("position")["x"] - 1 &&
-              this.el.getAttribute("position")["y"] < 1
-            ) {
-              let w = Math.random() * 8 - 4;
-              this.el.setAttribute("position", w + " 5 0");
-              cc.textContent = (Number(cc.textContent) + 1).toString();
-              fallSpeed += 0.001;
-            }
-          }
-        },
+      infoButton.addEventListener("click", function () {
+        overlay.style.display = "block";
+        pauseTimer();
       });
-      let isChecking = false;
 
-      function startGame() {
-        let left = 120; // Устанавливаем лимит времени в две минуты (120 секунд)
-
-        const setTime = () => {
-          let seconds =
-            (left % 60).toString().length === 1 ? "0" + (left % 60) : left % 60;
-          document.getElementById("time").textContent =
-            "0" + Math.floor(left / 60) + ":" + seconds;
-        };
-
-        const interval = setInterval(() => {
-          --left;
-          setTime();
-
-          if (left === 0) {
-            // Проверяем, закончилось ли время
-            clearInterval(interval); // Останавливаем таймер
-            isChecking = true;
-            // Проверяем, достигнута ли победа или поражение
-            const cc = document.getElementById("countc");
-            if (Number(cc.textContent) >= 45) {
-              swal(
-                "Победа!",
-                "Вы собрали " + cc.textContent + " фруктов и победили!",
-                "success" 
-              ).then((value) => {
-                // Сбрасываем значения счетчика фруктов и времени для начала новой игры
-                cc.textContent = "0";
-                startGame(); // Начинаем новую игру
-                isChecking = false;
-              });
-            } else {
-              swal(
-                "Поражение",
-                "Вы собрали только " +
-                  cc.textContent +
-                  " фруктов. Попробуйте еще раз.",
-                "error"
-              ).then((value) => {
-                // Сбрасываем значения счетчика фруктов и времени для начала новой игры
-                cc.textContent = "0";
-                startGame(); // Начинаем новую игру
-                isChecking = false;
-              });
-            }
-          }
-        }, 1000);
+      overlay.addEventListener("click", function () {
+        overlay.style.display = "none";
+        resumeTimer();
+      });
+      // Функция для постановки таймера на паузу
+      function pauseTimer() {
+        timerPaused = true;
       }
 
-      // Начинаем новую игру при загрузке страницы
+      // Функция для возобновления таймера
+      function resumeTimer() {
+        timerPaused = false;
+      }
+    </script>
+    
+    <script>
+      let isChecking = false;
+
+      document.getElementById("countc").textContent = "0";
+
+      function startGame() {
+        let timeLeft = 120;
+        const timeDisplay = document.getElementById("time");
+        const countDisplay = document.getElementById("countc");
+
+        const updateTimer = () => {
+          let minutes = Math.floor(timeLeft / 60)
+            .toString()
+            .padStart(2, "0");
+          let seconds = (timeLeft % 60).toString().padStart(2, "0");
+          timeDisplay.textContent = `${minutes}:${seconds}`;
+        };
+
+        const gameInterval = setInterval(() => {
+          if (!timerPaused) {
+          timeLeft--;
+          updateTimer();
+          if (timeLeft === 0) {
+            clearInterval(gameInterval);
+            isChecking = true;
+            checkGameEnd();
+          }
+          }
+        }, 1000);
+
+        function checkGameEnd() {
+          const score = Number(countDisplay.textContent);
+          if (score >= 35) {
+            swal(
+              "Победа!",
+              `Вы собрали ${score} фруктов и победили!`,
+              "success"
+            ).then(() => {
+              resetGame();
+            });
+          } else {
+            swal(
+              "Поражение",
+              `Вы собрали только ${score} фруктов. Попробуйте еще раз.`,
+              "error"
+            ).then(() => {
+              resetGame();
+            });
+          }
+        }
+
+        function resetGame() {
+          countDisplay.textContent = "0";
+          startGame();
+          isChecking = false;
+        }
+
+        updateTimer();
+      }
+
+      document.addEventListener("markerFound", (event) => {
+        const markerId = event.target.id;
+        const fruitElement = document.querySelector("[data-type]");
+        if (!fruitElement) return;
+
+        const fruitType = fruitElement.getAttribute("data-type");
+        const countDisplay = document.getElementById("countc");
+
+        if (
+          (markerId === "appleMarker" && fruitType === "apple") ||
+          (markerId === "orangeMarker" && fruitType === "orange") ||
+          (markerId === "lemonMarker" && fruitType === "lemon")
+        ) {
+          countDisplay.textContent = (
+            Number(countDisplay.textContent) + 1
+          ).toString();
+        }
+
+        spawnFruit();
+      });
+
       startGame();
     </script>
-	
     <div id="cell" hidden="true">0</div>
     <a-scene vr-mode-ui="enabled: false">
       <a-entity camera></a-entity>
       <a-marker
         preset="custom"
-        id="mr"
+        id="appleMarker"
         type="pattern"
-        url="https://cdn.glitch.global/1c001aeb-cbaf-4227-870d-0b41044173e3/pattern-logo.patt"
+        url="assets/pattern-apple.patt"
       >
         <a-entity
-          collider
-          id="plat"
-          gltf-model="https://cdn.glitch.me/1c001aeb-cbaf-4227-870d-0b41044173e3/lukoshko.glb?v=1713874008751"
+          id="appleBasket"
+          gltf-model="assets/basket_apple.glb"
           position="0 0 0"
-          scale="0.6 0.5 0.6"
+          scale="0.4 0.4 0.4"
           rotation="-20 0 0"
           class="collidable"
         ></a-entity>
       </a-marker>
+      <a-marker
+        preset="custom"
+        id="orangeMarker"
+        type="pattern"
+        url="assets/pattern-orange.patt"
+      >
+        <a-entity
+          id="orangeBasket"
+          gltf-model="assets/basket_orange.glb"
+          position="0 0 0"
+          scale="0.4 0.4 0.4"
+          rotation="-20 0 0"
+          class="collidable"
+        ></a-entity>
+      </a-marker>
+      <a-marker
+        preset="custom"
+        id="lemonMarker"
+        type="pattern"
+        url="assets/pattern-lemon.patt"
+      >
+        <a-entity
+          id="lemonBasket"
+          gltf-model="assets/basket_lemon.glb"
+          position="0 0 0"
+          scale="0.4 0.4 0.4"
+          rotation="-20 0 0"
+          class="collidable"
+        ></a-entity>
+      </a-marker>
+      <a-marker
+        preset="custom"
+        id="staticFruitMarker"
+        type="pattern"
+        url="assets/pattern-fruits.patt"
+      >
+        <a-entity
+          id="staticFruitHolder"
+          position="0 0 0"
+          scale="1 1 1"
+        ></a-entity>
+      </a-marker>
     </a-scene>
 
-    <div id="left">
-      <img
-        src="assets/arrow.png"
-		alt="arrow_left"
-        style="width: 60%; transform: scaleX(-1)"
-      />
-    </div>
-    <div id="right">
-      <img
-        src="assets/arrow.png"
-		alt="arrow_right"
-        style="width: 60%; transform: scaleX(-1)"
-      />
-    </div>
-
-    <script id="count">
-      count = 0;
-      document
-        .getElementById("plat")
-        .addEventListener("collide", function (evt) {
-          count += 1;
-        });
-    </script>
-	
     <script>
-	  const backgroundMusic = document.getElementById("audio");
-      backgroundMusic.volume = 0.4;
       const fruits = [
         {
           model:
-            "assets/apple.glb"
+            "assets/apple.glb",
+          type: "apple",
         },
         {
           model:
             "assets/lemon.glb",
+          type: "lemon",
         },
-	{
+        {
           model:
             "assets/orange.glb",
+          type: "orange",
         },
       ];
 
-      const marker = document.querySelector("#mr");
+      const markerApple = document.querySelector("#appleMarker");
+      const markerOrange = document.querySelector("#orangeMarker");
+      const markerLemon = document.querySelector("#lemonMarker");
+      const markerStaticFruit = document.querySelector("#staticFruitHolder");
 
-      fruits.forEach((fruit, index) => {
+      let activeFruitIndex = -1;
+
+      const spawnFruit = () => {
+        if (activeFruitIndex !== -1) {
+          document.getElementById("fruit" + activeFruitIndex).remove();
+        }
+
+        activeFruitIndex = Math.floor(Math.random() * fruits.length);
+        const fruit = fruits[activeFruitIndex];
         let newDiv = document.createElement("a-entity");
         newDiv.setAttribute("gltf-model", fruit.model);
-        newDiv.setAttribute("scale", "0.3 0.3 0.3");
+        newDiv.setAttribute("scale", "0.4 0.4 0.4");
         newDiv.setAttribute("rotation", "0 90 0");
         newDiv.setAttribute("animation-mixer", "clip: *; loop: repeat");
-        newDiv.setAttribute("id", "fruit" + index);
-        // Generate random position within a certain range
-        let randomX = Math.random() * 8 - 4; // X position between -4 and 4
-        let randomY = Math.random() * 8 + 5; // Y position between 5 and 13
-        newDiv.setAttribute("position", `${randomX} ${randomY} 0`);
-        newDiv.setAttribute("down", "");
-        marker.appendChild(newDiv);
-      });
-    </script>
+        newDiv.setAttribute("id", "fruit" + activeFruitIndex);
+        newDiv.setAttribute("data-type", fruit.type);
 
-    <script>
-      const plat = document.getElementById("plat");
-      const button = document.getElementById("left");
-      button.addEventListener("click", function () {
-        let pso = plat.getAttribute("position");
-        plat.setAttribute("position", pso["x"] - 1 + " 0 0");
-      });
-      const button2 = document.getElementById("right");
-      button2.addEventListener("click", function () {
-        let pso = plat.getAttribute("position");
-        plat.setAttribute("position", pso["x"] + 1 + " 0 0");
-      });
+        markerStaticFruit.appendChild(newDiv);
+      };
+
+      spawnFruit();
     </script>
   </body>
 </html>
